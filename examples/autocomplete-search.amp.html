@@ -1,0 +1,102 @@
+
+<!doctype html>
+<html ⚡>
+<head>
+  <meta charset="utf-8">
+  <script async src="/dist/amp.js"></script>
+  <title>AMP Autocomplete Demo</title>
+  <link rel="canonical" href="amps.html">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async custom-element="amp-autocomplete" src="/dist/v0/amp-autocomplete-0.1.max.js"></script>
+  <script async custom-element="amp-form" src="/dist/v0/amp-form-0.1.max.js"></script>
+  <script async custom-template="amp-mustache" src="/dist/v0/amp-mustache-0.2.max.js"></script>
+  <script async custom-element="amp-bind" src="/dist/v0/amp-bind-0.1.max.js"></script>
+  <style amp-custom>
+    body {
+      font-family: sans-serif; 
+      background-color: #f2f2f2;
+    }
+    input[type=text], select {
+      width: 50vh !important;
+      padding: 14px 20px !important;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type=submit] {
+      background-color: #DD4F23;
+      border: 1px solid #DD4F23;
+      padding: 14px 20px;
+      transform: translateY(2px);
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-image: url('bind/img/ic_search_white_24dp_1x.png');
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    input[type=submit]:focus {
+      outline: 0;
+    }
+    input[type=submit]:hover {
+      background-color: #C32B0E;
+    }
+    .i-amphtml-autocomplete-item {
+      border: none !important;
+      padding: .5rem 1rem;
+    }
+    .i-amphtml-autocomplete-item + .i-amphtml-autocomplete-item {
+      border-top: 1px solid #ccc !important;
+    }
+    .i-amphtml-autocomplete-results {
+      border-radius: 4px !important;
+      box-shadow: 0px 2px 4px 0px rgba(0,0,0,.5);
+      z-index: 10;
+    }
+    div#search {
+      display: flex;
+      flex-direction: column;
+      padding: 50px;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+    }
+    .product {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+  <script>
+      (self.AMP=self.AMP||[]).push((AMP) => {
+        AMP.toggleExperiment('amp-autocomplete', true);
+      });
+  </script>
+</head>
+<body>
+  <div id="search">
+    <form method="get" action-xhr="https://gratis-flax.glitch.me/form/search-json/get" target="_blank">
+      <amp-autocomplete filter="none" min-characters="0" filter-value="name"
+        src="https://gratis-flax.glitch.me/form/autocomplete/search-query"
+        [src]="'https://gratis-flax.glitch.me/form/autocomplete/search-query?q=' + (query || '')" submit-on-enter>
+          <input type="text" name="value"
+            on="input-debounced:AMP.setState({ query: event.value })">
+          <template type="amp-mustache">
+            <div class="product"  value="{{name}}">
+              <amp-img width="24" height="24" src="{{img}}"></amp-img>
+              <div>
+                  <div class="product-name">{{name}}</div>
+                  <div class="product-description">{{description}}</div>
+              </div>
+              <div class="product-price">{{price}}</div>
+            </div>
+          </template> 
+      </amp-autocomplete>
+      <input name="submit-button" type="submit" value="">
+  </form>
+  </div>
+    </body>
+</html>
