@@ -133,6 +133,8 @@ export class AmpAutocomplete extends AMP.BaseElement {
         `Experiment ${EXPERIMENT} is not turned on.`);
 
     this.action_ = Services.actionServiceForDoc(this.element);
+    this.registerAction('clear', this.clearInputHandler_.bind(this));
+
     const jsonScript =
       this.element.querySelector('script[type="application/json"]');
     if (jsonScript) {
@@ -610,6 +612,17 @@ export class AmpAutocomplete extends AMP.BaseElement {
       default:
         return Promise.resolve();
     }
+  }
+
+ /** 
+  * Clears the text in the input field.
+  * @private
+  */
+  clearInputHandler_() {
+    this.inputElement_.value = this.userInput_ = '';
+    this.mutateElement(() => {
+      this.filterDataAndRenderResults_(this.sourceData_, this.userInput_);
+    });
   }
 
   /** @override */
