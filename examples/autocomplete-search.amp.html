@@ -16,9 +16,11 @@
     body {
       font-family: sans-serif; 
       background-color: #f2f2f2;
+      background: url('https://images.pexels.com/photos/95425/pexels-photo-95425.jpeg') no-repeat;
+      background-size: cover;
     }
-    input[type=text], select {
-      width: 50vh !important;
+    input[type=text] {
+      width: 50vw !important;
       padding: 14px 20px !important;
       margin: 8px 0;
       display: inline-block;
@@ -58,16 +60,37 @@
       z-index: 10;
     }
     div#search {
+      padding-top: 10vh;
       display: flex;
       flex-direction: column;
-      padding: 50px;
       align-items: center;
       justify-content: center;
-      margin: auto;
     }
     .product {
       display: flex;
       align-items: center;
+      line-height: 36px;
+    }
+    .trending {
+      margin-right: 6px;
+    }
+    .name-and-description {
+      flex-grow: 1;
+    }
+    .product-price {
+      width: 30px;
+    }
+    i {
+      color: #ccc;
+    }
+    b, h1 {
+      color: #DD4F23;
+      text-shadow: 1px 1px white;
+    }
+    .results {
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px 20px;
+      border-radius: 4px;
     }
   </style>
   <script>
@@ -78,25 +101,48 @@
 </head>
 <body>
   <div id="search">
-    <form method="get" action-xhr="https://gratis-flax.glitch.me/form/search-json/get" target="_blank">
-      <amp-autocomplete filter="none" min-characters="0" filter-value="name"
-        src="https://gratis-flax.glitch.me/form/autocomplete/search-query"
-        [src]="'https://gratis-flax.glitch.me/form/autocomplete/search-query?q=' + (query || '')" submit-on-enter>
-          <input type="text" name="value"
+    <h1>insta complete</h1> 
+    <form method="get" action-xhr="https://cyan-cauliflower.glitch.me/form/search-json/get" target="_blank" autocomplete="off">
+      <amp-autocomplete filter="none" min-characters="0" max-entries="10" filter-value="name"
+        src="https://cyan-cauliflower.glitch.me/form/autocomplete/search-query"
+        [src]="'https://cyan-cauliflower.glitch.me/form/autocomplete/search-query?q=' + (query || '')" submit-on-enter>
+          <input type="text" name="product-value"
             on="input-debounced:AMP.setState({ query: event.value })">
           <template type="amp-mustache">
-            <div class="product"  value="{{name}}">
-              <amp-img width="24" height="24" src="{{img}}"></amp-img>
-              <div>
-                  <div class="product-name">{{name}}</div>
-                  <div class="product-description">{{description}}</div>
+            {{#isInitial}}
+              <div class="product">
+                <b>trending groceries</b>
               </div>
-              <div class="product-price">{{price}}</div>
-            </div>
+              {{#products}}
+                <div class="product" value="{{name}}">
+                  <amp-img class="trending" width="24" height="24" src="img/trending.png"></amp-img>
+                  <span class="name-and-description">{{name}}</span>
+                </div>
+              {{/products}}
+            {{/isInitial}}
+            {{^isInitial}}
+              <div class="product"  value="{{name}}">
+                <div class="display-emoji">{{emoji}}</div>
+                <div class="name-and-description">
+                    <div class="product-name"><b>{{name}}</b> <i>{{description}}</i></div>
+                </div>
+                <div class="product-price">{{price}}</div>
+              </div>
+            {{/isInitial}}
           </template> 
-      </amp-autocomplete>
-      <input name="submit-button" type="submit" value="">
-  </form>
+        </amp-autocomplete>
+        <input name="submit-button" type="submit" value="">
+        <div submit-success>
+          <template type="amp-mustache">
+            <div class="results">
+              <h1>Here are the results:</h1>
+              <ul>
+                  {{#results}}<li>{{title}}</li>{{/results}}
+              </ul>
+            </div>
+          </template>
+        </div>
+      </form>
   </div>
     </body>
 </html>

@@ -27,7 +27,7 @@
     <h1>Autocomplete</h1>
     <h2>Attributes</h2>
     <p>no attributes</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" src="autocomplete-cities.example.json">
           <input type="text" name="input1" required>
       </amp-autocomplete>
@@ -40,7 +40,7 @@
     </form>
 
     <p>min-characters = 0</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" min-characters="0" src="autocomplete-cities.example.json">
           <input type="text" name="input2" required>
       </amp-autocomplete>
@@ -53,7 +53,7 @@
     </form>
 
     <p>min-characters = 3</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" min-characters="3" src="autocomplete-cities.example.json">
           <input type="text" name="input3" required>
       </amp-autocomplete>
@@ -66,7 +66,7 @@
     </form>
 
     <p>max-entries = 3</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" max-entries="3" src="autocomplete-cities.example.json">
           <input type="text" name="input4" required>
       </amp-autocomplete>
@@ -79,7 +79,7 @@
     </form>
 
     <p>max-entries = 10, min-characters = 0</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" max-entries="10" min-characters="0"  src="autocomplete-cities.example.json">
           <input type="text" name="input5" required>
       </amp-autocomplete>
@@ -92,7 +92,7 @@
     </form>
 
     <p>submit-on-enter</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring"
         src="autocomplete-cities.example.json" submit-on-enter>
           <input type="text" name="input6" required>
@@ -107,7 +107,7 @@
 
     <h2>Filters</h2>
     <p>substring</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="substring" min-characters="0"
         src="autocomplete-cities.example.json" submit-on-enter>
           <input type="text" name="input7" required>
@@ -121,7 +121,7 @@
     </form>
 
     <p>prefix</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="prefix" min-characters="0"
         src="autocomplete-cities.example.json" submit-on-enter>
           <input type="text" name="input8" required>
@@ -135,7 +135,7 @@
     </form>
 
     <p>token-prefix</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="token-prefix" min-characters="0"
         src="autocomplete-cities.example.json" submit-on-enter>
           <input type="text" name="input9" required>
@@ -149,7 +149,7 @@
     </form>
 
     <p>none to inline data</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="none" min-characters="0"
         [src]="manualFilterData" submit-on-enter>
           <input type="text" name="input10" required 
@@ -168,10 +168,10 @@
     </form>
 
     <p>none to endpoint</p>
-    <form method="post" action-xhr="/form/echo-json/post" target="_blank">
+    <form autocomplete="off" method="post" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="none" min-characters="0"
-        src="/form/autocomplete/query"
-        [src]="'/form/autocomplete/query?q=' + (query || '')" submit-on-enter>
+        src="https://gratis-flax.glitch.me/form/autocomplete/query"
+        [src]="'https://gratis-flax.glitch.me/form/autocomplete/query?q=' + (query || '')" submit-on-enter>
           <input type="text" name="input11" required 
             on="input-debounced:AMP.setState({ query: event.value })">
       </amp-autocomplete>
@@ -185,7 +185,7 @@
 
     <h2>Datasources in form context</h2>
     <p>Static data</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -224,7 +224,7 @@
     </form>
 
     <p>Remote data</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -246,7 +246,7 @@
     </form>
 
     <p>Both data sources provided (should cause warning and display remote data)</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -271,7 +271,7 @@
     </form>
 
     <p>Neither data sources provided (should cause warning)</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -292,7 +292,7 @@
     </form>
 
     <p>Dynamic data, changing json path</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -317,7 +317,7 @@
     <button on="tap:AMP.setState({ srcUrl: 'autocomplete-cities.example.json' })">Suggest US cities</button>
 
     <p>Dynamic data, changing json object</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -344,7 +344,7 @@
     <button on="tap:AMP.setState({ srcJson: { 'items' : ['hello a', 'hello b', 'hello c'] } })">Suggest hellos</button>
 
     <p>Dynamic data, changing json path and object</p>
-    <form method="post"
+    <form autocomplete="off" method="post"
         action-xhr="https://gratis-flax.glitch.me/form/echo-json/post"
         target="_blank">
         <fieldset>
@@ -373,7 +373,7 @@
 
     <h2>Templates in search context</h2>
     <p>Plain Text, Submit on enter</p>
-    <form method="get" action-xhr="/form/search-json/get" target="_blank">
+    <form autocomplete="off" method="get" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
         <fieldset>
             <label>
                 <span>Search for</span>
@@ -394,7 +394,7 @@
     </form>
 
     <p>Rich Text, Template Child, Default Value Property</p>
-    <form method="get" action-xhr="/form/search-json/get" target="_blank">
+    <form autocomplete="off" method="get" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
         <fieldset>
             <label>
                 <span>Search for</span>
@@ -435,7 +435,7 @@
     </form>
 
     <p>Rich Text, Template Child, Custom Value Property</p>
-    <form method="get" action-xhr="/form/search-json/get" target="_blank">
+    <form autocomplete="off" method="get" action-xhr="https://gratis-flax.glitch.me/form/echo-json/post" target="_blank">
         <fieldset>
             <label>
                 <span>Search for</span>
@@ -479,7 +479,8 @@
     </form>
 
     <p>Rich Text, Template Attribute, Default Value Property</p>
-    <form method="get" action-xhr="/form/search-json/get" target="_blank">
+    <form autocomplete="off" method="get" action-xhr="https://gratis-flax.glitch.me
+    /form/echo-json/post" target="_blank">
         <fieldset>
             <label>
                 <span>Search for</span>

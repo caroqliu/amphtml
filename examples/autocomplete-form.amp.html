@@ -1,0 +1,211 @@
+
+
+<!doctype html>
+<html ⚡>
+<head>
+  <meta charset="utf-8">
+  <script async src="/dist/amp.js"></script>
+  <title>AMP Autocomplete Demo</title>
+  <link rel="canonical" href="amps.html">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async custom-element="amp-autocomplete" src="/dist/v0/amp-autocomplete-0.1.max.js"></script>
+  <script async custom-element="amp-form" src="/dist/v0/amp-form-0.1.max.js"></script>
+  <script async custom-template="amp-mustache" src="/dist/v0/amp-mustache-0.2.max.js"></script>
+  <script async custom-element="amp-bind" src="/dist/v0/amp-bind-0.1.max.js"></script>
+  <style amp-custom>
+    body {
+      font-family: sans-serif; 
+      background-color: #f2f2f2;
+    }
+    input[type=text], select {
+      width: 100% !important;
+      padding: .5rem 1rem !important;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type=submit] {
+      width: 100%;
+      background-color: #DD4F23;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button {
+      width: auto;
+      padding: .5rem 1rem;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button:active, input[type=submit]:active {
+      transform: translateY(2px);
+    }
+    button:focus, input[type=submit]:focus {
+      outline: 0;
+    }
+    input[type=submit]:hover {
+      background-color: #C32B0E;
+    }
+    fieldset {
+      border-radius: 5px;
+      margin: 10px 0px;
+    }
+    div#order-form {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+    }
+    .i-amphtml-autocomplete-item {
+      border: none !important;
+      padding: .5rem 1rem;
+    }
+    .i-amphtml-autocomplete-item + .i-amphtml-autocomplete-item {
+      border-top: 1px solid #ccc !important;
+    }
+    .i-amphtml-autocomplete-results {
+      border-radius: 4px !important;
+      box-shadow: 0px 2px 4px 0px rgba(0,0,0,.5);
+      z-index: 10;
+    }
+  </style>
+  <script>
+      (self.AMP=self.AMP||[]).push((AMP) => {
+        AMP.toggleExperiment('amp-autocomplete', true);
+      });
+  </script>
+</head>
+<body>
+  <div id="order-form">
+    <h1>auto🍕complete</h1>
+    <form method="post" width="50vh" autocomplete="off"
+      action-xhr="https://cyan-cauliflower.glitch.me/form/echo-json/post"
+      target="_blank">
+      <fieldset>
+        <legend>Build Your Pizza</legend>
+          <div>Pizza Size</div>
+            <input type="radio" value="10" name="size">
+            <label for="14">10 Inch</label>
+            <input type="radio" value="12" name="size">
+            <label for="14">12 Inch</label>
+            <input type="radio" value="14" name="size">
+            <label for="14">14 Inch</label>
+          <br><br>
+          <div>🍕Toppings selected: 
+            <span [text]="topping">none</span>
+          </div>
+          <label>
+          <amp-autocomplete id="toppingsInput" filter="substring" min-characters="0" filter-value="topping"
+              [src]="toppingsData" on="select:AMP.setState({ topping: addedTopping ? topping + event : event, addedTopping: true }), toppingsInput.clear">
+              <input type="text" name="value">
+              <script type="application/json">
+                { "items": [ 
+                  {"topping" : "pineapple", "emoji" : "🍍"},
+                  {"topping" : "broccoli", "emoji" : "🥦"},
+                  {"topping" : "arugula", "emoji" : "🌿"},
+                  {"topping" : "bacon", "emoji" : "🥓"},
+                  {"topping" : "anchovies", "emoji" : "🐟"},
+                  {"topping" : "chocolate", "emoji" : "🍫"},
+                  {"topping" : "extra cheddar", "emoji" : "🧀"},
+                  {"topping" : "chicken", "emoji" : "🍗"},
+                  {"topping" : "mushroom", "emoji" : "🍄"},
+                  {"topping" : "peppers", "emoji" : "🌶"},
+                  {"topping" : "pear and gorgonzola", "emoji" : "🍐🧀"}]}
+              </script>
+              <template type="amp-mustache">
+                <div value="{{emoji}}">
+                  {{topping}} {{emoji}}
+                </div>
+              </template> 
+          </amp-autocomplete>
+          <button type="button" on="tap:AMP.setState({ topping: topping || 'none', toppingsData: 
+            { 'items': [ 
+              {'topping' : 'pineapple', 'emoji' : '🍍'},
+              {'topping' : 'broccoli', 'emoji' : '🥦'},
+              {'topping' : 'arugula', 'emoji' : '🌿'},
+              {'topping' : 'chocolate', 'emoji' : '🍫'},
+              {'topping' : 'mushroom', 'emoji' : '🍄'},
+              {'topping' : 'peppers', 'emoji' : '🌶'},
+              {'topping' : 'pear and gorgonzola', 'emoji' : '🍐🧀'}
+          ]}})">Vegetarian toppings only</button>
+          <button type="button" on="tap:AMP.setState({ topping: topping || 'none', toppingsData: { 'items': [ 
+            {'topping' : 'pineapple', 'emoji' : '🍍'},
+            {'topping' : 'broccoli', 'emoji' : '🥦'},
+            {'topping' : 'arugula', 'emoji' : '🌿'},
+            {'topping' : 'bacon', 'emoji' : '🥓'},
+            {'topping' : 'anchovies', 'emoji' : '🐟'},
+            {'topping' : 'chocolate', 'emoji' : '🍫'},
+            {'topping' : 'chicken', 'emoji' : '🍗'},
+            {'topping' : 'mushroom', 'emoji' : '🍄'},
+            {'topping' : 'peppers', 'emoji' : '🌶'},
+            {'topping' : 'pear and gorgonzola', 'emoji' : '🍐🧀'}]}
+        })">All toppings</button>
+        </label><br><br>
+        <label><span>Choose a drink:</span>
+          <amp-autocomplete id="drinkInput" filter="token-prefix" min-characters="0" filter-value="drink">
+            <input type="text" name="value">
+            <script type="application/json">
+              { "items": [ 
+                {"drink" : "Tap water",
+                  "emoji" : "🚰"},
+                {"drink" : "Coffee",
+                  "emoji" : "☕"},
+                {"drink" : "Hot tea",
+                  "emoji" : "🍵"},
+                {"drink" : "Soda",
+                  "emoji" : "🥤"},
+                {"drink" : "Glass of milk",
+                  "emoji" : "🥛"},
+                {"drink" : "I'm a baby, who let me order a pizza?",
+                  "emoji" : "🍼👶🏻"}]}
+            </script>
+            <template type="amp-mustache">
+              <div value="{{drink}}">
+               {{emoji}} {{drink}}
+              </div>
+            </template> 
+          </amp-autocomplete>
+        </label>
+      </fieldset>
+      <fieldset>
+          <legend>Delivery information</legend>
+          <label>
+            Name
+            <input type="text" name="name">
+          </label><br>
+          <label>
+            <span>Phone number</span>
+            <input type="text" name="phone-number">
+          </label><br>
+          <label>
+              <span>Address</span>
+              <input type="text" name="address">
+          </label><br>
+          <label>
+              State
+                <amp-autocomplete filter="token-prefix" min-characters="1" src="autocomplete-states.example.json">
+                    <input type="text" name="state-address">
+                </amp-autocomplete>
+          </label>
+        </fieldset>
+        <input name="submit-button" type="submit" value="Send in my order!"><br>
+      <div submitting>
+        <template type="amp-mustache">
+          Order submitting... Thank you for waiting {{name}}.
+        </template>
+      </div>
+      <div submit-success>
+        <template type="amp-mustache">
+          Success! Your order is on its way.
+        </template>
+      </div>
+  </form>
+  </div>
+    </body>
+</html>
