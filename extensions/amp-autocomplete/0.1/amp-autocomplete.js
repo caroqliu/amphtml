@@ -614,7 +614,7 @@ export class AmpAutocomplete extends AMP.BaseElement {
     }
   }
 
- /** 
+  /**
   * Clears the text in the input field.
   * @private
   */
