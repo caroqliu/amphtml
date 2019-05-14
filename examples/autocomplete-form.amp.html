@@ -61,18 +61,6 @@
       display: flex;
       flex-direction: column;
     }
-    .i-amphtml-autocomplete-item {
-      border: none !important;
-      padding: .5rem 1rem;
-    }
-    .i-amphtml-autocomplete-item + .i-amphtml-autocomplete-item {
-      border-top: 1px solid #ccc !important;
-    }
-    .i-amphtml-autocomplete-results {
-      border-radius: 4px !important;
-      box-shadow: 0px 2px 4px 0px rgba(0,0,0,.5);
-      z-index: 10;
-    }
   </style>
   <script>
       (self.AMP=self.AMP||[]).push((AMP) => {
@@ -101,7 +89,7 @@
           </div>
           <label>
           <amp-autocomplete id="toppingsInput" filter="substring" min-characters="0" filter-value="topping"
-              [src]="toppingsData" on="select:AMP.setState({ topping: addedTopping ? topping + event : event, addedTopping: true }), toppingsInput.clear">
+              [src]="toppingsData" on="select:AMP.setState({ topping: addedTopping ? topping + event.value : event.value, addedTopping: true }), toppingsInput.clear">
               <input type="text" name="value">
               <script type="application/json">
                 { "items": [ 
@@ -118,7 +106,7 @@
                   {"topping" : "pear and gorgonzola", "emoji" : "🍐🧀"}]}
               </script>
               <template type="amp-mustache">
-                <div value="{{emoji}}">
+                <div data-value="{{emoji}}">
                   {{topping}} {{emoji}}
                 </div>
               </template> 
@@ -165,7 +153,7 @@
                   "emoji" : "🍼👶🏻"}]}
             </script>
             <template type="amp-mustache">
-              <div value="{{drink}}">
+              <div data-value="{{drink}}">
                {{emoji}} {{drink}}
               </div>
             </template> 
@@ -186,12 +174,11 @@
               <span>Address</span>
               <input type="text" name="address">
           </label><br>
-          <label>
-              State
-                <amp-autocomplete filter="token-prefix" min-characters="1" src="autocomplete-states.example.json">
-                    <input type="text" name="state-address">
-                </amp-autocomplete>
-          </label>
+          <label>State</label>
+          <amp-autocomplete filter="substring" min-characters="0"
+            src="autocomplete-states.example.json">
+            <input type="text" required>
+          </amp-autocomplete>
         </fieldset>
         <input name="submit-button" type="submit" value="Send in my order!"><br>
       <div submitting>
