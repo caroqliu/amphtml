@@ -19,6 +19,7 @@ import {dev, devAssert, user, userAssert} from './log';
 import {dict} from './utils/object';
 import {getContextMetadata} from '../src/iframe-attributes';
 import {getMode} from './mode';
+import {internalRuntimeVersion} from './internal-version';
 import {isExperimentOn} from './experiments';
 import {setStyle} from './style';
 import {startsWith} from './string';
@@ -192,7 +193,7 @@ export function preloadBootstrap(win, preconnect, opt_disallowCustom) {
   // fetched by it.
   const scriptUrl = getMode().localDev
     ? getAdsLocalhost(win) + '/dist.3p/current/integration.js'
-    : `${urls.thirdParty}/$internalRuntimeVersion$/f.js`;
+    : `${urls.thirdParty}/${internalRuntimeVersion()}/f.js`;
   preconnect.preload(scriptUrl, 'script');
 }
 
@@ -241,7 +242,7 @@ export function getDefaultBootstrapBaseUrl(parentWindow, opt_srcFileBasename) {
   parentWindow.defaultBootstrapSubDomain =
       parentWindow.defaultBootstrapSubDomain || getSubDomain(parentWindow);
   return 'https://' + parentWindow.defaultBootstrapSubDomain +
-      `.${urls.thirdPartyFrameHost}/$internalRuntimeVersion$/` +
+      `.${urls.thirdPartyFrameHost}/${internalRuntimeVersion()}/` +
       `${srcFileBasename}.html`;
 }
 
@@ -254,7 +255,7 @@ export function getDefaultBootstrapBaseUrl(parentWindow, opt_srcFileBasename) {
 export function getDevelopmentBootstrapBaseUrl(parentWindow, srcFileBasename) {
   return overrideBootstrapBaseUrl || getAdsLocalhost(parentWindow)
     + '/dist.3p/'
-    + (getMode().minified ? `$internalRuntimeVersion$/${srcFileBasename}`
+    + (getMode().minified ? `${internalRuntimeVersion()}/${srcFileBasename}`
       : `current/${srcFileBasename}.max`)
     + '.html';
 }
@@ -329,7 +330,7 @@ function getCustomBootstrapBaseUrl(parentWindow, opt_strictForUnitTest) {
       '%s (%s) in element %s. See https://github.com/ampproject/amphtml' +
       '/blob/master/spec/amp-iframe-origin-policy.md for details.', url,
   parsed.origin, meta);
-  return url + '?$internalRuntimeVersion$';
+  return `${url}?${internalRuntimeVersion()}`;
 }
 
 /**

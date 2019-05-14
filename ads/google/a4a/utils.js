@@ -31,6 +31,7 @@ import {getConsentPolicyState} from '../../../src/consent';
 import {getMode} from '../../../src/mode';
 import {getOrCreateAdCid} from '../../../src/ad-cid';
 import {getTimingDataSync} from '../../../src/service/variable-source';
+import {internalRuntimeVersion} from '../../../src/internal-version';
 import {parseJson} from '../../../src/json';
 import {whenUpgradedToCustomElement} from '../../../src/dom';
 
@@ -288,7 +289,7 @@ export function googlePageParameters(a4a, startTime) {
           'is_amp': a4a.isXhrAllowed() ?
             AmpAdImplementation.AMP_AD_XHR_TO_IFRAME_OR_AMP :
             AmpAdImplementation.AMP_AD_IFRAME_GET,
-          'amp_v': '$internalRuntimeVersion$',
+          'amp_v': internalRuntimeVersion(),
           'd_imp': '1',
           'c': getCorrelator(win, ampDoc, clientId),
           'ga_cid': win.gaGlobal.cid || null,
@@ -720,7 +721,7 @@ export function addCsiSignalsToAmpAnalyticsConfig(
       `&c=${correlator}&slotId=${slotId}&qqid.${slotId}=${qqid}` +
       `&dt=${initTime}` +
       (eids != 'null' ? `&e.${slotId}=${eids}` : '') +
-      `&rls=$internalRuntimeVersion$&adt.${slotId}=${adType}`;
+      `&rls=${internalRuntimeVersion()}&adt.${slotId}=${adType}`;
   const isAmpSuffix = isVerifiedAmpCreative ? 'Friendly' : 'CrossDomain';
   config['triggers']['continuousVisibleIniLoad'] = {
     'on': 'ini-load',
