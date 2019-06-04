@@ -37,6 +37,14 @@
       color: red;
       text-decoration: underline;
     }
+    .trending {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .product {
+      align-items: center;
+      line-height: 36px;
+    }
   </style>
   <script>
       (self.AMP=self.AMP||[]).push((AMP) => {
@@ -46,6 +54,78 @@
 </head>
 <body>
     <h1>Autocomplete</h1>
+    <h2>Double Rendering</h2>
+    <div>
+      <amp-state id="generalInventory">
+          <script type="application/json">
+            { "items" : [{
+              "name": "apple",
+              "emoji": "🍎",
+              "price": "$1"
+            }, {
+              "name": "grapes",
+              "emoji": "🍇",
+              "price": "$2"
+            }, {
+              "name": "whole milk",
+              "emoji": "🥛",
+              "price": "$4"
+            }, {
+              "name": "banana",
+              "emoji": "🍌",
+              "price": "$0.50"
+            }] }
+          </script>
+      </amp-state>
+      <form method="post"
+        action-xhr="/form/echo-json/post"
+        target="_top">
+        <amp-autocomplete filter="substring" min-characters="0" filter-value="name" [src]="manualFilterData">
+          <input name="product" on="input-debounced:AMP.setState({ manualFilterData: event.value.length == 0 ? 
+               initialInventory : generalInventory })">
+          <amp-state id="initialInventory">
+              <script type="application/json">
+                { "items" : [
+                  { "isInitial": "true", 
+                    "name": "apple"
+                  }, { "isInitial": "true", 
+                    "name": "grapes"
+                  }, { "isInitial": "true", 
+                    "name": "whole milk"
+                  }, { "isInitial": "true", 
+                    "name": "banana"
+                  } ] 
+              }
+              </script>
+          </amp-state>
+          <template type="amp-mustache">
+              {{#isInitial}}
+                <div class="product" data-value="{{name}}">
+                  <amp-img class="trending" width="24" height="24" src="trending.png"></amp-img>
+                  <span class="name-and-description">{{name}}</span>
+                </div>
+              {{/isInitial}}
+              {{^isInitial}}
+                <div data-value="{{name}}" class="product">
+                  <div class="name-and-description">
+                      <div class="product-name">{{emoji}} <b>{{name}}</b> <i>{{price}}</i></div>
+                  </div>
+                </div>
+              {{/isInitial}}
+            </template> 
+          </amp-autocomplete>
+        <input type="submit" value="Search">
+        <div submit-success>
+          <template type="amp-mustache">
+            Success! Added <strong>{{product}}</strong> to your cart.
+          </template>
+        </div>
+        <div submit-error>
+          Error!
+        </div>
+      </form>
+    </div>
+
     <h2>Select Event</h2>
   <p>min-characters = 0, partial red underline</p>
     <form method="post" action-xhr="/form/echo-json/post" target="_blank">
@@ -458,7 +538,7 @@
                 <span>Your hometown</span>
                 <amp-autocomplete filter="substring" min-characters="0"
                     src="autocomplete-cities.example.json"
-                    [src]="srcUrl">
+                    [src]="srcUrl ? srcUrl : 'autocomplete-countries.example.json'">
                     <input type="text" name="value" required>
                 </amp-autocomplete>
             </label>
