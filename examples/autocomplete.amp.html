@@ -140,7 +140,7 @@
         </template>
     </div>
     </form>
-    <p [text]="'Hello ' + inputSelect">Hello World</p>
+    <p [text]="'Hello ' + (inputSelect || 'World')">Hello World</p>
 
     <h2>Disable browser autofill</h2>
     <p>form has no autocomplete attr</p>
@@ -368,9 +368,9 @@
     <p>none to inline data</p>
     <form method="post" action-xhr="/form/echo-json/post" target="_blank">
       <amp-autocomplete filter="none" min-characters="0"
-        [src]="manualFilterData" submit-on-enter>
+        [src]="noneFilterData" submit-on-enter>
           <input type="text" name="input10" required
-            on="input-debounced:AMP.setState({ manualFilterData:
+            on="input-debounced:AMP.setState({ noneFilterData:
               { 'items' : [event.value + ' 1', event.value + ' 2', event.value + ' 3'] } })">
           <script type=application/json>
            { "items" : [] }
