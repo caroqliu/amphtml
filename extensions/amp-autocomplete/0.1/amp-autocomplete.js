@@ -16,8 +16,10 @@
 
 import {ActionTrust} from '../../../src/action-constants';
 import {CSS} from '../../../build/amp-autocomplete-0.1.css';
+import {Deferred} from '../../../src/utils/promise';
 import {Keys} from '../../../src/utils/key-codes';
 import {Layout} from '../../../src/layout';
+import {Pass} from '../../../src/pass';
 import {Services} from '../../../src/services';
 import {
   UrlReplacementPolicy,
@@ -25,7 +27,7 @@ import {
 } from '../../../src/batched-json';
 import {childElementsByTag, removeChildren} from '../../../src/dom';
 import {createCustomEvent} from '../../../src/event-helper';
-import {dev, user, userAssert} from '../../../src/log';
+import {dev, devAssert, user, userAssert} from '../../../src/log';
 import {getValueForExpr, tryParseJson} from '../../../src/json';
 import {hasOwn, map, ownProperty} from '../../../src/utils/object';
 import {includes, startsWith} from '../../../src/string';
@@ -37,6 +39,14 @@ import fuzzysearch from '../../../third_party/fuzzysearch/index';
 
 const EXPERIMENT = 'amp-autocomplete';
 const TAG = 'amp-autocomplete';
+
+/** @typedef {{
+  data:(?Array<!JsonObject|string>),
+  resolver:!Function,
+  rejecter:!Function,
+  input:string
+}} */
+export let RenderItems;
 
 /**
  * Different filtering options.
@@ -149,6 +159,20 @@ export class AmpAutocomplete extends AMP.BaseElement {
      * @private {?string}
      */
     this.initialAutocompleteAttr_ = null;
+
+    /**
+     * Maintains invariant that only one fetch result may be processed for
+     * render at a time.
+     * @const @private {!../../../src/pass.Pass}
+     */
+    this.renderPass_ = new Pass(this.win, () => this.doRenderPass_());
+
+    /**
+     * Latest fetched items to render and the promise resolver and rejecter
+     * to be invoked on render success or fail, respectively.
+     * @private {?RenderItems}
+     */
+    this.renderItems_ = null;
 
     /** @const @private {!../../../src/service/template-impl.Templates} */
     this.templates_ = Services.templatesFor(this.win);
@@ -497,11 +521,7 @@ export class AmpAutocomplete extends AMP.BaseElement {
       return Promise.resolve();
     }
     const filteredData = this.filterData_(sourceData, opt_input);
-    return this.renderResults_(
-      filteredData,
-      dev().assertElement(this.container_),
-      opt_input
-    );
+    return this.scheduleRender_(filteredData, opt_input);
   }
 
   /**
@@ -540,6 +560,68 @@ export class AmpAutocomplete extends AMP.BaseElement {
       });
     }
     return renderPromise;
+  }
+
+  /**
+   * Schedules a fetch result to be rendered in the near future.
+   * @param {!Array<!JsonObject|string>} data
+   * @param {string} input
+   * @return {!Promise}
+   * @private
+   */
+  scheduleRender_(data, input) {
+    dev().info(TAG, 'schedule:', this.element, data);
+
+    const deferred = new Deferred();
+    const {promise, resolve: resolver, reject: rejecter} = deferred;
+
+    // If there's nothing currently being rendered, schedule a render pass.
+    if (!this.renderItems_) {
+      this.renderPass_.schedule();
+    }
+
+    this.renderItems_ = /** @type {?RenderItems} */ ({
+      data,
+      resolver,
+      rejecter,
+      input,
+    });
+
+    return promise;
+  }
+
+  /**
+   * Renders the items stored in `this.renderItems_`. If its value changes
+   * by the time render completes, schedules another render pass.
+   * @private
+   */
+  doRenderPass_() {
+    const current = this.renderItems_;
+
+    devAssert(current && current.data, 'Nothing to render.');
+    dev().info(TAG, 'pass:', this.element, current);
+    const scheduleNextPass = () => {
+      // If there's a new `renderItems_`, schedule it for render.
+      if (this.renderItems_ !== current) {
+        this.renderPass_.schedule(1); // Allow paint frame before next render.
+      } else {
+        this.renderedItems_ = /** @type {?Array} */ (this.renderItems_.data);
+        this.renderItems_ = null;
+      }
+    };
+    const onFulfilledCallback = () => {
+      scheduleNextPass();
+      current.resolver();
+    };
+    const onRejectedCallback = () => {
+      scheduleNextPass();
+      current.rejecter();
+    };
+    this.renderResults_(
+      current.data,
+      dev().assertElement(this.container_),
+      current.input
+    ).then(onFulfilledCallback, onRejectedCallback);
   }
 
   /**
