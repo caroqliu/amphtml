@@ -13,6 +13,11 @@
   </style>
   <script async custom-element="amp-mention" src="https://cdn.ampproject.org/v0/amp-mention-0.1.js"></script>
   <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <script>	
+      (self.AMP=self.AMP||[]).push((AMP) => {	
+        AMP.toggleExperiment('amp-mention', true);	
+      });	
+  </script>
 </head>
 <body>
   <amp-mention layout="responsive" width="150" height="80"></amp-mention>

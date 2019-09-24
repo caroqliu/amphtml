@@ -379,6 +379,14 @@ const EXPERIMENTS = [
     spec: 'https://github.com/ampproject/amphtml/issues/24168',
     cleanupIssue: 'https://github.com/ampproject/amphtml/issues/24169',
   },
+  {
+    id: 'amp-mention',
+    name:
+      'AMP Mention provides a set of suggestions to' +
+      ' complete an inline mention as a substring of a larger input value.',
+    spec: 'https://github.com/ampproject/amphtml/issues/24582',
+    cleanupIssue: 'https://github.com/ampproject/amphtml/issues/24582',
+  },
 ];
 
 if (getMode().localDev) {

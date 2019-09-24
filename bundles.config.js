@@ -720,6 +720,12 @@ exports.extensionBundles = [
     type: TYPES.MEDIA,
   },
   {
+    name: 'amp-mention',
+    version: '0.1',
+    latestVersion: '0.1',
+    type: TYPES.MISC,
+  },
+  {
     name: 'amp-mustache',
     version: ['0.1', '0.2'],
     latestVersion: '0.2',
