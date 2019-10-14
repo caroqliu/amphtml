@@ -16,23 +16,28 @@
 
 import '../amp-mention';
 
-describes.realWin('amp-mention', {
-  amp: {
-    extensions: ['amp-mention'],
+describes.realWin(
+  'amp-mention',
+  {
+    amp: {
+      extensions: ['amp-mention'],
+    },
   },
-}, env => {
+  env => {
+    let win;
+    let element;
 
-  let win;
-  let element;
+    beforeEach(() => {
+      win = env.win;
+      element = win.document.createElement('amp-mention');
+      win.document.body.appendChild(element);
+    });
 
-  beforeEach(() => {
-    win = env.win;
-    element = win.document.createElement('amp-mention');
-    win.document.body.appendChild(element);
-  });
-
-  it('should have hello world when built', () => {
-    element.build();
-    expect(element.querySelector('div').textContent).to.equal('hello world');
-  });
-});
+    it('should not build without experiment', () => {
+      allowConsoleError(() => {
+        element.build();
+        expect(element.querySelector('div')).to.be.null;
+      });
+    });
+  }
+);
