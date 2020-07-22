@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import * as compat from /*OK*/ 'preact/compat';
 import * as hooks from /*OK*/ 'preact/hooks';
 import * as preact from /*OK*/ 'preact';
 
@@ -145,4 +146,13 @@ export function useCallback(cb, opt_deps) {
  */
 export function toChildArray(unusedChildren) {
   return preact.toChildArray.apply(undefined, arguments);
+}
+
+/**
+ * @param {function(JsonObject, {current: (T|null)}):PreactDef.Renderable} fn
+ * @return {PreactDef.Renderable}
+ * @template T
+ */
+export function forwardRef(fn) {
+  return compat.forwardRef(fn);
 }
