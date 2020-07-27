@@ -169,11 +169,13 @@ When using `amp-mustache` to calculate attribute values, quote escaping can be a
 
 ```html
 <template type="amp-mustache">
-  <!-- A double-quote (") in foo will cause malformed HTML. -->
-  <amp-img alt="{{foo}}" src="example.jpg" width="100" height="100"></amp-img>
+  <div>
+    <!-- A double-quote (") in foo will cause malformed HTML. -->
+    <amp-img alt="{{foo}}" src="example.jpg" width="100" height="100"></amp-img>
 
-  <!-- A single-quote (') or double-quote (") in bar will cause an AMP runtime parse error. -->
-  <button on="tap:AMP.setState({foo: '{{bar}}'})">Click me</button>
+    <!-- A single-quote (') or double-quote (") in bar will cause an AMP runtime parse error. -->
+    <button on="tap:AMP.setState({foo: '{{bar}}'})">Click me</button>
+  </div>
 </template>
 ```
 
@@ -188,6 +190,26 @@ HTML entities are not preserved in `<template>` elements.
 This can be an issue if you want to server-side render a `<template>` containing user-generated text, since user-generated text containing {% raw %}`{{`, `}}`, `{{{`, `}}}`{% endraw %} will be treated as a Mustache section. E.g. replacing {% raw %}`{{`{% endraw %} with HTML entities `&lcub;&lcub;` won't work because they aren't preserved when the browser parses the `<template>`.
 
 Workarounds include replacing strings like {% raw %}`{{`{% endraw %} with different characters or stripping them outright from user-generated content.
+
+### Rendering multiple elements
+
+When using `amp-mustache` to render multiple elements, a good practice is to place these in a single top-level element to prevent unintended side effects. Some possible consequences of providing multiple top-level elements: each top-level element could be treated as a distinct item in a list, or all same-level elements could be wrapped by an additional <div> layer, potentially breaking structure-based CSS rules.
+
+```html
+<template type="amp-mustache">
+  <!-- GOOD: Singular top-level element. -->
+  <div id="my-template-group">
+    <h1>Header</h1>
+    <p>Text</p>
+  </div>
+</template>
+
+<template type="amp-mustache">
+  <!-- BAD: Multiple top-level elements. -->
+  <h1>Header</h1>
+  <p>Text</p>
+</template>
+```
 
 ## Validation
 
