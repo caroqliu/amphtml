@@ -55,16 +55,18 @@ const KEYBOARD_SELECT_MODE = {
 function SelectorWithRef(
   {
     as: Comp = 'div',
+    children,
     disabled,
     defaultValue = [],
+    form,
     keyboardSelectMode: kbs = KEYBOARD_SELECT_MODE.NONE,
-    value,
     multiple,
+    name,
     onChange,
     onKeyDown: customOnKeyDown,
     role = 'listbox',
     tabIndex,
-    children,
+    value,
     ...rest
   },
   ref
@@ -97,7 +99,7 @@ function SelectorWithRef(
     [multiple, onChange, selected]
   );
 
-  const registerOption = useCallback((option) => {
+  const register = useCallback((option) => {
     setOptions((options) => {
       options.push(option);
       return options;
@@ -111,14 +113,16 @@ function SelectorWithRef(
 
   const context = useMemo(
     () => ({
+      disabled,
+      form,
       kbs,
-      registerOption,
+      multiple,
+      name,
+      register,
       selected,
       selectOption,
-      disabled,
-      multiple,
     }),
-    [kbs, registerOption, selected, selectOption, disabled, multiple]
+    [disabled, form, kbs, multiple, name, register, selected, selectOption]
   );
 
   useEffect(() => {
@@ -235,6 +239,7 @@ export {Selector};
  */
 export function Option({
   as: Comp = 'div',
+  children,
   disabled = false,
   onClick: customOnClick,
   onKeyDown: customOnKeyDown,
@@ -246,9 +251,11 @@ export function Option({
 }) {
   const {
     disabled: selectorDisabled,
-    multiple: selectorMultiple,
+    form,
     kbs,
-    registerOption,
+    multiple: selectorMultiple,
+    name,
+    register,
     selected,
     selectOption,
   } = useContext(SelectorContext);
@@ -286,10 +293,10 @@ export function Option({
   );
 
   useEffect(() => {
-    if (registerOption) {
-      return registerOption(option);
+    if (register) {
+      return register(option);
     }
-  }, [registerOption, option]);
+  }, [register, option]);
 
   const isSelected =
     /** @type {!Array} */ (selected).includes(option) && !disabled;
@@ -314,5 +321,12 @@ export function Option({
     style: {...statusStyle, ...style},
     tabIndex: tabIndex ?? kbs === KEYBOARD_SELECT_MODE.SELECT ? '-1' : '0',
   };
-  return <Comp {...optionProps} />;
+  return (
+    <Comp {...optionProps}>
+      {children}
+      {isSelected && (
+        <input hidden defaultValue={option} name={name} form={form} />
+      )}
+    </Comp>
+  );
 }

@@ -22,6 +22,7 @@ import {PreactBaseElement} from '../../../src/preact/base-element';
 import {Services} from '../../../src/services';
 import {
   closestAncestorElementBySelector,
+  createElementWithAttributes,
   toggleAttribute,
 } from '../../../src/dom';
 import {createCustomEvent} from '../../../src/event-helper';
@@ -30,7 +31,7 @@ import {dict} from '../../../src/utils/object';
 import {forwardRef} from '../../../src/preact/compat';
 import {isExperimentOn} from '../../../src/experiments';
 import {toArray} from '../../../src/types';
-import {useLayoutEffect} from '../../../src/preact';
+import {useLayoutEffect, useRef} from '../../../src/preact';
 
 /** @const {string} */
 const TAG = 'amp-selector';
@@ -216,9 +217,48 @@ function OptionShim({
  * @return {PreactDef.Renderable}
  */
 function SelectorShimWithRef(
-  {shimDomElement, multiple, disabled, role = 'listbox', ...rest},
+  {
+    shimDomElement,
+    multiple,
+    disabled,
+    form,
+    name,
+    role = 'listbox',
+    value,
+    ...rest
+  },
   ref
 ) {
+  const input = useRef(
+    createElementWithAttributes(shimDomElement.ownerDocument, 'input', {
+      'hidden': '',
+    })
+  );
+
+  useLayoutEffect(() => {
+    shimDomElement.appendChild(input.current);
+  }, [shimDomElement, input]);
+
+  useLayoutEffect(() => {
+    if (!form) {
+      input.current.removeAttribute('form');
+    } else {
+      input.current.setAttribute('form', form);
+    }
+  }, [shimDomElement, input, form]);
+
+  useLayoutEffect(() => {
+    if (!name) {
+      input.current.removeAttribute('name');
+    } else {
+      input.current.setAttribute('name', name);
+    }
+  }, [shimDomElement, input, name]);
+
+  useLayoutEffect(() => {
+    input.current.setAttribute('value', value);
+  }, [shimDomElement, value]);
+
   useLayoutEffect(() => {
     toggleAttribute(shimDomElement, 'multiple', multiple);
     shimDomElement.setAttribute('aria-multiselectable', !!multiple);
@@ -239,6 +279,7 @@ function SelectorShimWithRef(
       multiple={multiple}
       disabled={disabled}
       ref={ref}
+      value={value}
       {...rest}
     />
   );
@@ -256,6 +297,7 @@ AmpSelector['detached'] = true;
 /** @override */
 AmpSelector['props'] = {
   'disabled': {attr: 'disabled', type: 'boolean'},
+  'form': {attr: 'form'},
   'multiple': {attr: 'multiple', type: 'boolean'},
   'name': {attr: 'name'},
   'role': {attr: 'role'},

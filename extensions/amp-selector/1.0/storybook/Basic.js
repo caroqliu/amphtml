@@ -65,6 +65,44 @@ function SelectorWithActions(props) {
   );
 }
 
+export const form = () => {
+  return (
+    <form>
+      <Selector name="poll">
+        <Option style={imgStyle} option="1" disabled>
+          <img
+            alt="Sea landscape"
+            style={{width: '90px', height: '60px'}}
+            src="https://amp.dev/static/samples/img/landscape_sea_300x199.jpg"
+          />
+        </Option>
+        <Option style={imgStyle} option="2">
+          <img
+            alt="Desert landscape"
+            style={{width: '90px', height: '60px'}}
+            src="https://amp.dev/static/samples/img/landscape_desert_300x200.jpg"
+          />
+        </Option>
+        <br></br>
+        <Option style={imgStyle} option="3">
+          <img
+            alt="Ship landscape"
+            style={{width: '90px', height: '60px'}}
+            src="https://amp.dev/static/samples/img/landscape_ship_300x200.jpg"
+          />
+        </Option>
+        <Option style={imgStyle} option="4">
+          <img
+            alt="Village landscape"
+            style={{width: '90px', height: '60px'}}
+            src="https://amp.dev/static/samples/img/landscape_village_300x200.jpg"
+          />
+        </Option>
+      </Selector>
+    </form>
+  );
+};
+
 export const listItems = () => {
   return (
     <SelectorWithActions multiple aria-label="Image menu">
