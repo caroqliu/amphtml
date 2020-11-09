@@ -16,8 +16,8 @@
 
 import * as Preact from '../../../../src/preact';
 import {Option, Selector} from '../selector';
+import {select, withKnobs} from '@storybook/addon-knobs';
 import {withA11y} from '@storybook/addon-a11y';
-import {withKnobs} from '@storybook/addon-knobs';
 
 export default {
   title: 'Selector',
@@ -128,6 +128,22 @@ export const multiselect = () => {
       <Option as="li" option="4">
         Option 4
       </Option>
+    </Selector>
+  );
+};
+
+export const keyboardSelectMode = () => {
+  const keyboardSelectMode = select(
+    'keyboard select mode',
+    ['none', 'focus', 'select'],
+    'focus'
+  );
+  return (
+    <Selector keyboardSelectMode={keyboardSelectMode} aria-label="Option menu">
+      <Option option="1">Option 1</Option>
+      <Option option="2">Option 2</Option>
+      <Option option="3">Option 3</Option>
+      <Option option="4">Option 4</Option>
     </Selector>
   );
 };
