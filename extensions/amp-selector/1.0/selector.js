@@ -16,6 +16,7 @@
 
 import * as CSS from './selector.css';
 import * as Preact from '../../../src/preact';
+import {Keys} from '../../../src/utils/key-codes';
 import {forwardRef} from '../../../src/preact/compat';
 import {mod} from '../../../src/utils/math';
 import {removeItem} from '../../../src/utils/array';
@@ -36,6 +37,17 @@ const SelectorContext = Preact.createContext(
 const EMPTY_OPTIONS = [];
 
 /**
+ * Set of namespaces that can be set for lifecycle reporters.
+ *
+ * @enum {string}
+ */
+const KEYBOARD_SELECT_MODE = {
+  NONE: 'none',
+  FOCUS: 'focus',
+  SELECT: 'select',
+};
+
+/**
  * @param {!SelectorDef.Props} props
  * @param {{current: (!SelectorDef.SelectorApi|null)}} ref
  * @return {PreactDef.Renderable}
@@ -45,10 +57,13 @@ function SelectorWithRef(
     as: Comp = 'div',
     disabled,
     defaultValue = [],
+    keyboardSelectMode: kbs = KEYBOARD_SELECT_MODE.NONE,
     value,
     multiple,
     onChange,
+    onKeyDown: customOnKeyDown,
     role = 'listbox',
+    tabIndex,
     children,
     ...rest
   },
@@ -96,13 +111,14 @@ function SelectorWithRef(
 
   const context = useMemo(
     () => ({
+      kbs,
       registerOption,
       selected,
       selectOption,
       disabled,
       multiple,
     }),
-    [disabled, multiple, registerOption, selected, selectOption]
+    [kbs, registerOption, selected, selectOption, disabled, multiple]
   );
 
   useEffect(() => {
@@ -167,6 +183,30 @@ function SelectorWithRef(
     [clear, toggle, selectBy]
   );
 
+  const onKeyDown = useCallback(
+    (e) => {
+      if (kbs === KEYBOARD_SELECT_MODE.SELECT) {
+        const {key} = e;
+        switch (key) {
+          case Keys.LEFT_ARROW: // Fallthrough.
+          case Keys.UP_ARROW:
+            selectBy(-1);
+            break;
+          case Keys.RIGHT_ARROW: // Fallthrough.
+          case Keys.DOWN_ARROW:
+            selectBy(1);
+            break;
+          default:
+            break;
+        }
+      }
+      if (customOnKeyDown) {
+        customOnKeyDown(e);
+      }
+    },
+    [customOnKeyDown, kbs, selectBy]
+  );
+
   return (
     <Comp
       {...rest}
@@ -175,6 +215,8 @@ function SelectorWithRef(
       aria-multiselectable={multiple}
       disabled={disabled}
       multiple={multiple}
+      onKeyDown={onKeyDown}
+      tabIndex={tabIndex ?? kbs === KEYBOARD_SELECT_MODE.SELECT ? '0' : '-1'}
     >
       <SelectorContext.Provider value={context}>
         {children}
@@ -194,29 +236,54 @@ export {Selector};
 export function Option({
   as: Comp = 'div',
   disabled = false,
-  onClick,
+  onClick: customOnClick,
+  onKeyDown: customOnKeyDown,
   option,
   role = 'option',
   style,
-  tabIndex = '0',
+  tabIndex,
   ...rest
 }) {
   const {
-    selected,
-    selectOption,
     disabled: selectorDisabled,
     multiple: selectorMultiple,
+    kbs,
     registerOption,
+    selected,
+    selectOption,
   } = useContext(SelectorContext);
-  const clickHandler = (e) => {
+
+  const trySelect = useCallback(() => {
     if (selectorDisabled || disabled) {
       return;
     }
-    if (onClick) {
-      onClick(e);
-    }
     selectOption(option);
-  };
+  }, [disabled, option, selectOption, selectorDisabled]);
+
+  const onClick = useCallback(
+    (e) => {
+      trySelect();
+      if (customOnClick) {
+        customOnClick(e);
+      }
+    },
+    [customOnClick, trySelect]
+  );
+
+  const onKeyDown = useCallback(
+    (e) => {
+      if (kbs !== KEYBOARD_SELECT_MODE.FOCUS) {
+        return;
+      }
+      if (e.key === Keys.ENTER || e.key === Keys.Space) {
+        trySelect();
+      }
+      if (customOnKeyDown) {
+        customOnKeyDown(e);
+      }
+    },
+    [customOnKeyDown, kbs, trySelect]
+  );
 
   useEffect(() => {
     if (registerOption) {
@@ -238,13 +305,14 @@ export function Option({
     ...rest,
     disabled,
     'aria-disabled': String(disabled),
-    onClick: clickHandler,
+    onClick,
+    onKeyDown,
     option,
     role,
     selected: isSelected,
     'aria-selected': String(isSelected),
     style: {...statusStyle, ...style},
-    tabIndex,
+    tabIndex: tabIndex ?? kbs === KEYBOARD_SELECT_MODE.SELECT ? '-1' : '0',
   };
-  return <Comp {...optionProps}></Comp>;
+  return <Comp {...optionProps} />;
 }
