@@ -275,7 +275,7 @@ export function Option({
       if (kbs !== KEYBOARD_SELECT_MODE.FOCUS) {
         return;
       }
-      if (e.key === Keys.ENTER || e.key === Keys.Space) {
+      if (e.key === Keys.ENTER || e.key === Keys.SPACE) {
         trySelect();
       }
       if (customOnKeyDown) {
