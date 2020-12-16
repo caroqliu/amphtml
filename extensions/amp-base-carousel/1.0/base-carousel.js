@@ -22,6 +22,7 @@ import {Scroller} from './scroller';
 import {WithAmpContext} from '../../../src/preact/context';
 import {forwardRef} from '../../../src/preact/compat';
 import {isRTL} from '../../../src/dom';
+import {px} from '../../../src/style';
 import {
   toChildArray,
   useCallback,
@@ -111,7 +112,7 @@ function BaseCarouselWithRef(
   const currentSlideRef = useRef(currentSlide);
   const setCurrentSlide =
     carouselContext.setCurrentSlide ?? setCurrentSlideState;
-  const {slides, setSlides} = carouselContext;
+  const {slides, setSlides, setTopDistance} = carouselContext;
 
   const scrollRef = useRef(null);
   const containRef = useRef(null);
@@ -229,6 +230,24 @@ function BaseCarouselWithRef(
     }
     setRtl(isRTL(doc));
   }, [dir, setRtl]);
+
+  // Adjust visible slide count when container size or parameters change.
+  useLayoutEffect(() => {
+    const node = containRef.current;
+    if (!node || _thumbnails) {
+      return;
+    }
+    // Use local window.
+    const win = toWin(node.ownerDocument.defaultView);
+    if (!win) {
+      return undefined;
+    }
+    const observer = new win.ResizeObserver(() => {
+      setTopDistance(px(node.offsetHeight + node.offsetTop));
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [setTopDistance, _thumbnails]);
 
   return (
     <ContainWrapper

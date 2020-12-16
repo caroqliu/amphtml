@@ -16,7 +16,8 @@
 import * as Preact from '../../../src/preact';
 import {CarouselContext} from '../../amp-base-carousel/1.0/carousel-context';
 import {ContainWrapper} from '../../../src/preact/component';
-import {useMemo, useState} from '../../../src/preact';
+import {setStyle} from '../../../src/style';
+import {useCallback, useMemo, useRef, useState} from '../../../src/preact';
 
 /**
  * @param {!InlineGalleryDef.Props} props
@@ -25,17 +26,27 @@ import {useMemo, useState} from '../../../src/preact';
 export function InlineGallery({children, ...rest}) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slides, setSlides] = useState([]);
+  const ref = useRef();
+
+  const setTopDistance = useCallback((topDistance) => {
+    if (!ref.current) {
+      return;
+    }
+    setStyle(ref.current, '--top-distance', topDistance);
+  }, []);
+
   const carouselContext = useMemo(
     () => ({
       currentSlide,
       setCurrentSlide,
+      setTopDistance,
       slides,
       setSlides,
     }),
-    [currentSlide, slides]
+    [currentSlide, slides, setTopDistance]
   );
   return (
-    <ContainWrapper size={false} layout={true} {...rest}>
+    <ContainWrapper size={false} layout={true} ref={ref} {...rest}>
       <CarouselContext.Provider value={carouselContext}>
         {children}
       </CarouselContext.Provider>

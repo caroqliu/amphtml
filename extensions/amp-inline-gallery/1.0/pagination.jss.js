@@ -33,10 +33,9 @@ const container = {
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0,
     display: 'flex',
-    margin: '18px',
     zIndex: 1,
+    top: 'calc(var(--top-distance, 100%) - 36px)',
   },
 };
 

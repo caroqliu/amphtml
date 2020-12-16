@@ -19,6 +19,7 @@ const CarouselContext = createContext(
   /** @type {BaseCarouselDef.ContextProps} */ ({
     slides: [],
     setSlides: (unusedSlides) => {},
+    setTopDistance: (unusedDistance) => {},
   })
 );
 export {CarouselContext};
