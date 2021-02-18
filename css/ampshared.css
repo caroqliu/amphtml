@@ -160,7 +160,7 @@ i-amphtml-sizer {
  * borwser and the optimizer.
  */
 @supports (aspect-ratio: 1 / 1) {
-  i-amphtml-sizer.i-amphtml-disable-for-ar {
+  i-amphtml-sizer.i-amphtml-disable-ar {
     display: none !important;
   }
 }
@@ -432,6 +432,13 @@ i-amphtml-scroll-container.amp-active, i-amp-scroll-container.amp-active {
      element build since overflows increase the height of their parents. */
   display: initial;
   line-height: normal;
+}
+
+/**
+ * "overflow" element must not contribute space to a size-defined element.
+ */
+.i-amphtml-layout-size-defined > [overflow] {
+  position: absolute;
 }
 
 .i-amphtml-element > [overflow].amp-visible {
